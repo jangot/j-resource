@@ -1,28 +1,17 @@
 "use strict";
 
-var request = require('http');
-var createResponse = require('./createResponse');
+var defaultInterceptors = require('./defaultInterceptors');
 
 var interceptors = [];
-var beforeInterceptors = [];
-var afterInterceptors = [];
 
-function resourceRequest(config, Resource) {
-    promisifyIntersepters(config, 'request')
-        .then((config) => {
-            return request(config)
-                .catch((e) => {
-                    throw {
-                        requestError: e
-                    }
-                });
+function resourceRequest(config) {
+    Promise
+        .resolve()
+        .then(() => {
+            return promisifyIntersepters(config, 'request')
         })
         .catch((e) => {
-            if (e.requestError) {
-                throw e.requestError;
-            } else {
-                return promisifyIntersepters(config, 'requestError')
-            }
+            return promisifyIntersepters(e, 'requestError')
         })
         .then((response) => {
             return promisifyIntersepters(response, 'response');
@@ -33,7 +22,7 @@ function resourceRequest(config, Resource) {
 }
 
 function promisifyIntersepters(params, interceptorType) {
-    var allInterceptors = [].concat(beforeInterceptors, interceptors, afterInterceptors);
+    var allInterceptors = [].concat(defaultInterceptors.before, interceptors, defaultInterceptors.after);
 
     return allInterceptors.reduce(
         (prev, curr) => {
