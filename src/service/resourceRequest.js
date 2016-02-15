@@ -1,38 +1,42 @@
 "use strict";
 
-var defaultInterceptors = require('./defaultInterceptors');
+var request = require('./request');
 
 var interceptors = [];
 
 function resourceRequest(config) {
-    Promise
-        .resolve()
-        .then(() => {
-            return promisifyIntersepters(config, 'request')
-        })
-        .catch((e) => {
-            return promisifyIntersepters(e, 'requestError')
-        })
-        .then((response) => {
-            return promisifyIntersepters(response, 'response');
-        })
-        .catch((e) => {
-            return promisifyIntersepters(e, 'responseError');
+    var requestPromise = promisifyIntersepters(Promise.resolve(config), 'request')
+        .then((config) => {
+            return request(config);
         });
+
+    return promisifyIntersepters(requestPromise, 'response');
 }
 
-function promisifyIntersepters(params, interceptorType) {
-    var allInterceptors = [].concat(defaultInterceptors.before, interceptors, defaultInterceptors.after);
-
-    return allInterceptors.reduce(
-        (prev, curr) => {
-            if (curr[interceptorType]) {
-                return prev.then(curr[interceptorType]);
+function promisifyIntersepters(startPromise, interceptorType) {
+    function getCallbacks(curr) {
+        if (curr[interceptorType]) {
+            var args = [curr[interceptorType]];
+            var errorCB = curr[interceptorType + 'Error'];
+            if (errorCB) {
+                args.push(errorCB);
             }
 
-            return prev;
+            return args;
+        } else {
+            return [(res) => {
+                return res;
+            }];
+        }
+    }
+
+    return interceptors.reduce(
+        (prev, curr) => {
+            var args = getCallbacks(curr);
+
+            return prev.then.apply(prev, args);
         },
-        Promise.resolve(params)
+        startPromise
     );
 }
 
