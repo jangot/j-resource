@@ -22,3 +22,73 @@ user
         console.log(result)
     })
 ```
+
+# Extend behavior
+```js
+var Resources = require('j-resource');
+var url = require('url');
+
+Resources.addInterceptor({
+    request: function(config) {
+        var newConfig = url.parse(config.url);
+        delete config.url;
+        
+        for (var name in newConfig) {
+            config[name] = newConfig[name]
+        }
+        
+        return config;
+    }
+});
+
+var config = {
+    query: {
+        url: 'http://my.domain.com/user',
+        method: 'GET'
+       }
+};
+
+var user = new Resources(config);
+
+user
+    .query()
+    .then((result) => {
+        console.log(result)
+    })
+
+```
+
+# Errors
+```js
+var Resources = require('j-resource');
+
+Resources.addInterceptor({
+    responceError: function(error) {
+        console.log(error);
+        
+        var dafaultData = {
+            string: 'foo'
+        }
+        
+        return defaultData;
+    }
+});
+
+
+var config = {
+    query: {
+         host: 'my.domain.com',
+         path: '/user',
+         port: '80',
+         method: 'GET'
+       }
+};
+
+var user = new Resources(config);
+
+user
+    .query()
+    .then((result) => {
+        console.log(result)
+    })
+```
