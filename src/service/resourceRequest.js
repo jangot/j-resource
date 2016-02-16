@@ -2,12 +2,12 @@
 
 var request = require('./request');
 
-var interceptors = [];
+var globalInterceptors = [];
 
 function resourceRequest(config) {
     config = config || {};
 
-    var currentInterceptors = (config.interceptors || []).concat(interceptors);
+    var currentInterceptors = (config.interceptors || []).concat(globalInterceptors);
 
     var requestPromise = runInterceptors(currentInterceptors, Promise.resolve(config), 'request')
         .then((config) => {
@@ -54,5 +54,5 @@ function runInterceptors(interceptors, startPromise, interceptorType) {
     );
 }
 
-resourceRequest.interceptors = interceptors;
+resourceRequest.interceptors = globalInterceptors;
 module.exports = resourceRequest;
