@@ -8,6 +8,8 @@ It is a library like ngResource form angular.js
 var Resources = require('j-resource');
 
 var config = {
+
+    // it is a config for http modele
     query: {
          host: 'my.domain.com',
          path: '/user',
