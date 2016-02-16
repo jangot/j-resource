@@ -5,36 +5,50 @@ var request = require('./request');
 var interceptors = [];
 
 function resourceRequest(config) {
-    var requestPromise = promisifyIntersepters(Promise.resolve(config), 'request')
+    config = config || {};
+
+    var currentInterceptors = (config.interceptors || []).concat(interceptors);
+
+    var requestPromise = runInterceptors(currentInterceptors, Promise.resolve(config), 'request')
         .then((config) => {
             return request(config);
         });
 
-    return promisifyIntersepters(requestPromise, 'response');
+    return runInterceptors(currentInterceptors, requestPromise, 'response');
 }
 
-function promisifyIntersepters(startPromise, interceptorType) {
-    function getCallbacks(curr) {
-        if (curr[interceptorType]) {
-            var args = [curr[interceptorType]];
-            var errorCB = curr[interceptorType + 'Error'];
-            if (errorCB) {
-                args.push(errorCB);
-            }
+function runInterceptors(interceptors, startPromise, interceptorType) {
+    function getNext(prevPromise, curr) {
+        var CB = curr[interceptorType] || function(data) {return data};
+        var errorCB = curr[interceptorType + 'Error'] || function(e) {throw e};
 
-            return args;
-        } else {
-            return [(res) => {
-                return res;
-            }];
-        }
+        return new Promise((resolve, reject) => {
+            prevPromise
+                .then((data) => {
+                    Promise
+                        .resolve()
+                        .then(() => {
+                            return CB(data);
+                        })
+                        .then(resolve)
+                        .catch(reject)
+                });
+            prevPromise
+                .catch((e) => {
+                    Promise
+                        .reject()
+                        .catch(() => {
+                            return errorCB(e);
+                        })
+                        .then(resolve)
+                        .catch(reject)
+                });
+        });
     }
 
     return interceptors.reduce(
         (prev, curr) => {
-            var args = getCallbacks(curr);
-
-            return prev.then.apply(prev, args);
+            return getNext(prev, curr);
         },
         startPromise
     );
