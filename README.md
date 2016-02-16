@@ -1,6 +1,8 @@
 j-resource
 ==========
 
+It is a library like ngResource form angular.js
+
 # Use
 ```js
 var Resources = require('j-resource');
