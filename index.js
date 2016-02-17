@@ -1,13 +1,20 @@
 "use strict";
 
-var factory = require('./src/service/factory');
 var resourceRequest = require('./src/service/resourceRequest');
 
-module.exports = function(config) {
-    config = config || {};
+class Resource {
+    constructor(config) {
+        Object.keys(config).forEach((key) => {
+            var methodParams = config[key];
+            this[key] = () => {
+                console.log('KEY', key);
+                return resourceRequest.call(this, methodParams);
+            };
+        });
+    }
+}
 
-    return factory(config);
-};
+module.exports = Resource;
 
 module.exports.addInterceptor = function(interceptor) {
     resourceRequest.interceptors.push(interceptor);
