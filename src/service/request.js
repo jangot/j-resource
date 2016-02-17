@@ -13,7 +13,7 @@ module.exports = function(options) {
 
             response.on('end', function () {
                 resolve({
-                    headers: response.headers,
+                    response: response,
                     body: str
                 });
             });
@@ -21,7 +21,7 @@ module.exports = function(options) {
             response.on('error', function(e) {
                 reject(e);
             });
-        };
+        }
 
         http.request(options, callback).end();
     });
