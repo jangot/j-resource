@@ -12,7 +12,10 @@ module.exports = function(options) {
             });
 
             response.on('end', function () {
-                resolve(str);
+                resolve({
+                    headers: response.headers,
+                    body: str
+                });
             });
 
             response.on('error', function(e) {
