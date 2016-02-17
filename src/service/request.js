@@ -3,7 +3,7 @@
 var http = require('http');
 
 module.exports = function(options) {
-    return Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
         function callback(response) {
             var str = '';
 

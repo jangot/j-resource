@@ -11,7 +11,11 @@ function resourceRequest(config) {
 
     var requestPromise = runInterceptors(currentInterceptors, Promise.resolve(config), 'request')
         .then((config) => {
-            return request(config);
+            try {
+                return request(config);
+            } catch (e) {
+                throw Error('Call request failed');
+            }
         });
 
     return runInterceptors(currentInterceptors, requestPromise, 'response');
