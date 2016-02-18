@@ -12,10 +12,16 @@ module.exports = function(options) {
             });
 
             response.on('end', function () {
-                resolve({
+                var result = {
                     response: response,
                     body: str
-                });
+                };
+                if (response.statusCode == 200) {
+                    resolve(result);
+                } else {
+                    reject(result);
+                }
+
             });
 
             response.on('error', function(e) {
