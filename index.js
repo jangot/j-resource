@@ -7,7 +7,6 @@ class Resource {
         Object.keys(config).forEach((key) => {
             var methodParams = config[key];
             this[key] = () => {
-                console.log('KEY', key);
                 return resourceRequest.call(this, methodParams);
             };
         });
