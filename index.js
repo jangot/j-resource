@@ -5,8 +5,9 @@ var resourceRequest = require('./src/service/resourceRequest');
 class Resource {
     constructor(config) {
         Object.keys(config).forEach((key) => {
-            var methodParams = config[key];
-            this[key] = () => {
+            var methodParams = config[key] || {};
+            this[key] = (params) => {
+                methodParams.params = params;
                 return resourceRequest.call(this, methodParams);
             };
         });
