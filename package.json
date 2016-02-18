@@ -1,6 +1,6 @@
 {
   "name": "j-resource",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "http resource",
   "main": "index.js",
   "scripts": {
@@ -8,10 +8,11 @@
     "cover": "istanbul cover -- _mocha test/ --recursive --reporter spec"
   },
   "keywords": [
-    "http",
-    "client",
+    "http-client",
+    "server",
     "rest",
-    "resource"
+    "resource",
+    "es6"
   ],
   "author": "jangot",
   "license": "ISC",

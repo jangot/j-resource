@@ -16,12 +16,12 @@ module.exports = function(options) {
                     response: response,
                     body: str
                 };
+
                 if (response.statusCode == 200) {
                     resolve(result);
                 } else {
                     reject(result);
                 }
-
             });
 
             response.on('error', function(e) {
