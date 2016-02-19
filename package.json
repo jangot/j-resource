@@ -1,6 +1,6 @@
 {
   "name": "j-resource",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "http resource",
   "main": "index.js",
   "scripts": {
@@ -27,7 +27,7 @@
     "sinon": "^1.17.3"
   },
   "dependencies": {
-    "http-client-factory": "0.3.0",
-    "lodash": "*"
+    "lodash": "*",
+    "request": "^2.69.0"
   }
 }

@@ -1,6 +1,7 @@
 "use strict";
 
-var HttpClientFactory = require("http-client-factory");
+
+var request = require('request');
 var _ = require('lodash');
 
 var clientParamNames = [
@@ -20,9 +21,18 @@ var clientParamNames = [
 
 module.exports = function(options) {
     var params = options.params || {};
-    var requestOptions = _.pick(options, clientParamNames);
+    var requestOptions = {
+        url: _.pick(options, clientParamNames),
+        formData: params
+    };
 
-    var client = HttpClientFactory.getClient();
-
-    return client.send(requestOptions, params);
+    return new Promise((resolve, reject) => {
+        request(requestOptions, (err, response, body) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve({response, body});
+            }
+        });
+    });
 };
