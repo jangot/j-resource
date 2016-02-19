@@ -51,7 +51,8 @@ function runInterceptors(interceptors, startPromise, interceptorType) {
         });
     }
 
-    return interceptors.reduce(
+    var reduce = (interceptorType === 'response') ? 'reduceRight' : 'reduce';
+    return interceptors[reduce](
         (prev, curr) => {
             return getNext(prev, curr);
         },
