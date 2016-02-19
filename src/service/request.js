@@ -12,7 +12,6 @@ var clientParamNames = [
     'port',
     'localAddress',
     'socketPath',
-    'method',
     'path',
     'headers',
     'auth',
@@ -23,7 +22,9 @@ module.exports = function(options) {
     var params = options.params || {};
     var requestOptions = {
         url: _.pick(options, clientParamNames),
-        formData: params
+        body: params,
+        json: true,
+        method: options.method || 'GET'
     };
 
     return new Promise((resolve, reject) => {
