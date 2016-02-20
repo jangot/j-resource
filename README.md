@@ -9,7 +9,7 @@ var Resources = require('j-resource');
 
 var config = {
 
-    // it is a config for resource lib
+    // it is a config for request lib
     query: {
          host: 'my.domain.com',
          path: '/user',
