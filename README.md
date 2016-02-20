@@ -142,10 +142,8 @@ user
 ```
 
 # Interceptors for one resource
-The library does not have cache functionality. There is a simple way for it.
 ```js
 var Resources = require('j-resource');
-var cache = require('you-cache-lib');
 
 var right = new Resource({
     check: {
