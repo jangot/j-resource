@@ -19,12 +19,6 @@ module.exports = [
             config.params = params;
 
             return config;
-        },
-        response: function(data) {
-            if (data.statusCode !== 200) {
-                throw data;
-            }
-            return data;
         }
     }
 ];

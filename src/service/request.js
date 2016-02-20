@@ -31,6 +31,8 @@ module.exports = function(options) {
         request(requestOptions, (err, response, body) => {
             if (err) {
                 reject(err);
+            } else if (response.statusCode !== 200) {
+                reject({response, body})
             } else {
                 resolve({response, body});
             }
