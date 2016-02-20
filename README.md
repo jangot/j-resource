@@ -164,10 +164,14 @@ var config = {
          method: 'GET',
          interceptors: [{
             request: function(config) {
-                return right.check({
-                    resource: 'user',
-                    action: 'get'
-                });
+                return right
+                    .check({
+                        resource: 'user',
+                        action: 'get'
+                    })
+                    .then(() => {
+                        return config;
+                    });
             }
          }]
        }
