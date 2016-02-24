@@ -188,28 +188,3 @@ user
         console.log(err)
     });
 ```
-
-# Add cache
-The library does not have cache but there is a simple way for realise it
-```js
-var Resources = require('j-resource');
-
-var cahce = {}
-
-var config = {
-    getUser: {
-         host: 'my.domain.com',
-         path: '/user/:name',
-         port: '80',
-         method: 'GET'
-       }
-};
-
-var user = new Resources(config);
-
-user
-    .getUser({name: 'Matvei'})
-    .then((result) => {
-        console.log(result)
-    })
-```

@@ -1,10 +1,12 @@
 "use strict";
 
 var request = require('./request');
+var debug = require('./debug');
 
 var globalInterceptors = [];
 
 function resourceRequest(config) {
+    debug.log('resourceRequest');
     config = config || {};
 
     var currentInterceptors = (config.interceptors || []).concat(globalInterceptors);
@@ -22,6 +24,7 @@ function resourceRequest(config) {
 }
 
 function runInterceptors(interceptors, startPromise, interceptorType) {
+    debug.log('interceptors', interceptorType);
     function getNext(prevPromise, curr) {
         var CB = curr[interceptorType] || function(data) {return data};
         var errorCB = curr[interceptorType + 'Error'] || function(e) {throw e};

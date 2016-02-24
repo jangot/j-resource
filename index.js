@@ -2,6 +2,7 @@
 
 var resourceRequest = require('./src/service/resourceRequest');
 var embeddedInterceptors = require('./src/service/interceptors');
+var debug = require('./src/service/debug');
 
 class Resource {
     constructor(config) {
@@ -16,7 +17,6 @@ class Resource {
 }
 
 module.exports = Resource;
-
 module.exports.addInterceptor = function(interceptor) {
     if (typeof interceptor === 'string') {
         interceptor = embeddedInterceptors[interceptor];
@@ -25,4 +25,7 @@ module.exports.addInterceptor = function(interceptor) {
         throw Error('Interceptor does not exist.')
     }
     resourceRequest.interceptors.push(interceptor);
+};
+module.exports.debug = function() {
+    debug.debug(true);
 };
