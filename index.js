@@ -1,6 +1,7 @@
 "use strict";
 
 var resourceRequest = require('./src/service/resourceRequest');
+var embeddedInterceptors = require('./src/service/interceptors');
 
 class Resource {
     constructor(config) {
@@ -17,5 +18,11 @@ class Resource {
 module.exports = Resource;
 
 module.exports.addInterceptor = function(interceptor) {
+    if (typeof interceptor === 'string') {
+        interceptor = embeddedInterceptors[interceptor];
+    }
+    if (!interceptor) {
+        throw Error('Interceptor does not exist.')
+    }
     resourceRequest.interceptors.push(interceptor);
 };

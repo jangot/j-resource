@@ -3,12 +3,11 @@
 var request = require('./request');
 
 var globalInterceptors = [];
-var defaultInterceptors = require('./interceptors');
 
 function resourceRequest(config) {
     config = config || {};
 
-    var currentInterceptors = (config.interceptors || []).concat(defaultInterceptors, globalInterceptors);
+    var currentInterceptors = (config.interceptors || []).concat(globalInterceptors);
 
     var requestPromise = runInterceptors(currentInterceptors, Promise.resolve(config), 'request')
         .then((config) => {
