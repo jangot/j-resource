@@ -11,9 +11,12 @@ var config = {
 
     // it is a config for request lib
     query: {
-         host: 'my.domain.com',
-         path: '/user',
-         port: '80',
+         uri: {
+            hostname: 'my.domain.com',
+            path: '/user',
+            port: '80',
+            protocol: 'http:'
+         },
          method: 'GET'
        }
 };
@@ -34,11 +37,15 @@ var url = require('url');
 
 Resources.addInterceptor({
     request: function(config) {
-        var newConfig = url.parse(config.url);
+        config = Object.assign({}, config);
+        var url = config.url;
         delete config.url;
         
-        for (var name in newConfig) {
-            config[name] = newConfig[name]
+        config.uri = {
+            hostname: 'my.domain.com',
+            path: url,
+            port: '80',
+            protocol: 'http:'
         }
         
         return config;
@@ -47,7 +54,7 @@ Resources.addInterceptor({
 
 var config = {
     query: {
-        url: 'http://my.domain.com/user',
+        url: '/user',
         method: 'GET'
        }
 };
@@ -81,11 +88,13 @@ Resources.addInterceptor({
 
 var config = {
     query: {
-         host: 'my.domain.com',
-         path: '/user',
-         port: '80',
-         method: 'GET'
-       }
+         uri: {
+            hostname: 'my.domain.com',
+            path: '/user',
+            port: '80',
+            protocol: 'http:'
+         }
+    }
 };
 
 var user = new Resources(config);
@@ -103,11 +112,13 @@ var Resources = require('j-resource');
 
 var config = {
     add: {
-         host: 'my.domain.com',
-         path: '/user/add',
-         port: '80',
-         method: 'POST'
-       }
+        uri: {
+            hostname: 'my.domain.com',
+            path: '/user',
+            port: '80',
+            protocol: 'http:'
+        }
+    }
 };
 
 var user = new Resources(config);
@@ -126,11 +137,13 @@ Resources.addInterceptor('paramsToUri');
 
 var config = {
     getUser: {
-         host: 'my.domain.com',
-         path: '/user/:name',
-         port: '80',
-         method: 'GET'
-       }
+         uri: {
+             hostname: 'my.domain.com',
+             path: '/user/:id',
+             port: '80',
+             protocol: 'http:'
+         }
+    }
 };
 
 var user = new Resources(config);
@@ -149,20 +162,25 @@ Resources.addInterceptor('paramsToUri');
 
 var right = new Resource({
     check: {
-        host: 'right.my.domain.com',
-        path: '/:resource/:action',
-        port: '80',
-        method: 'GET'
+        uri: {
+            hostname: 'right.my.domain.com',
+            path: '/:resource/:action',
+            port: '80',
+            protocol: 'http:'
+        }
     }
 });
 
 var config = {
     get: {
-         host: 'my.domain.com',
-         path: '/user/:name',
-         port: '80',
-         method: 'GET',
-         interceptors: [{
+        uri: {
+            hostname: 'my.domain.com',
+            path: '/user/:id',
+            port: '80',
+            protocol: 'http:'
+        }
+        method: 'GET',
+        interceptors: [{
             request: function(config) {
                 return right
                     .check({
@@ -172,9 +190,9 @@ var config = {
                     .then(() => {
                         return config;
                     });
-            }
-         }]
-       }
+                }
+            }]
+        }
 };
 
 var user = new Resources(config);
