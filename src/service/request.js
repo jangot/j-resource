@@ -19,9 +19,6 @@ module.exports = function(options) {
             if (err) {
                 debug.log('request error:', err);
                 reject(err);
-            } else if (response.statusCode !== 200) {
-                debug.log('request status error:', response.statusCode);
-                reject({response, body})
             } else {
                 debug.log('response', response);
                 debug.log('body', body);
