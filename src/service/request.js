@@ -1,28 +1,12 @@
 "use strict";
 
-
 var request = require('request');
-var _ = require('lodash');
 var debug = require('./debug');
-
-var clientParamNames = [
-    'protocol',
-    'host',
-    'hostname',
-    'family',
-    'port',
-    'localAddress',
-    'socketPath',
-    'path',
-    'headers',
-    'auth',
-    'agent'
-];
 
 module.exports = function(options) {
     var params = options.params || {};
     var requestOptions = {
-        url: _.pick(options, clientParamNames),
+        uri: Object.assign({}, options.uri),
         body: params,
         json: true,
         method: options.method || 'GET'

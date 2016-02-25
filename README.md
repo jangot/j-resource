@@ -117,7 +117,8 @@ var config = {
             path: '/user',
             port: '80',
             protocol: 'http:'
-        }
+        },
+        method: 'POST'
     }
 };
 
