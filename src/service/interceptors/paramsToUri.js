@@ -13,7 +13,7 @@ module.exports = {
             if (RE.test(path)) {
                 debug.log('interceptor, paramsToUrl, add param', key, params[key]);
                 path = path.replace(RE, params[key]);
-                delete params[key]
+                delete params[key];
             }
         });
 

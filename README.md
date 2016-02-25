@@ -122,7 +122,7 @@ user
 # Uri params
 ```js
 var Resources = require('j-resource');
-Resources.addInterceptor('paramsToUri);
+Resources.addInterceptor('paramsToUri');
 
 var config = {
     getUser: {
@@ -145,7 +145,7 @@ user
 # Interceptors for one resource
 ```js
 var Resources = require('j-resource');
-Resources.addInterceptor('paramsToUri);
+Resources.addInterceptor('paramsToUri');
 
 var right = new Resource({
     check: {
