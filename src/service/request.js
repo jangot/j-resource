@@ -5,12 +5,13 @@ var debug = require('./debug');
 
 module.exports = function(options) {
     var params = options.params || {};
-    var requestOptions = {
+
+    var requestOptions = Object.assign({}, options, {
         uri: Object.assign({}, options.uri),
-        body: params,
+        body: Object.assign({}, options.body, params),
         json: true,
         method: options.method || 'GET'
-    };
+    });
 
     debug.log('requestOptions:', requestOptions);
     return new Promise((resolve, reject) => {
