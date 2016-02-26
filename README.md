@@ -11,14 +11,14 @@ var config = {
 
     // it is a config for request lib
     query: {
-         uri: {
+        uri: {
             hostname: 'my.domain.com',
             path: '/user',
             port: '80',
             protocol: 'http:'
-         },
-         method: 'GET'
-       }
+        },
+        method: 'GET'
+    }
 };
 
 var user = new Resources(config);
@@ -26,37 +26,38 @@ var user = new Resources(config);
 user
     .query()
     .then((result) => {
-        console.log(result)
-    })
+        console.log(result);
+    });
 ```
 
 # Extend behavior
 ```js
 var Resources = require('j-resource');
-var url = require('url');
 
 Resources.addInterceptor({
     request: function(config) {
         config = Object.assign({}, config);
         var url = config.url;
         delete config.url;
-        
+
         config.uri = {
             hostname: 'my.domain.com',
             path: url,
             port: '80',
             protocol: 'http:'
-        }
-        
+        };
+
         return config;
     }
 });
 
 var config = {
+
+    // it is a config for request lib
     query: {
         url: '/user',
         method: 'GET'
-       }
+    }
 };
 
 var user = new Resources(config);
@@ -64,36 +65,87 @@ var user = new Resources(config);
 user
     .query()
     .then((result) => {
-        console.log(result)
+        console.log(result);
     })
-
+    .catch((e) => {
+        console.log(e);
+    });
 ```
+
+# Check response status
+```js
+var Resources = require('j-resource');
+
+Resources.addInterceptor({
+    response: function(result) {
+            switch (result.response.statusCode) {
+                case (200):
+                case (201):
+                case (202):
+                case (203):
+                case (204):
+                    return result;
+                    break;
+                default:
+                    throw result;
+            }
+        }
+});
+
+var config = {
+
+    // it is a config for request lib
+    query: {
+        uri: {
+            hostname: 'my.domain.com',
+            path: '/user',
+            port: '80',
+            protocol: 'http:'
+        },
+        method: 'GET'
+    }
+};
+
+var user = new Resources(config);
+
+user
+    .query()
+    .then((result) => {
+        console.log(result);
+    })
+    .catch((e) => {
+        console.log(e);
+    });
+```
+
 
 # Errors
 ```js
 var Resources = require('j-resource');
 
 Resources.addInterceptor({
-    responceError: function(error) {
+    responseError: function(error) {
         console.log(error);
-        
-        var dafaultData = {
+
+        var defaultData = {
             string: 'foo'
-        }
-        
+        };
+
         return defaultData;
     }
 });
 
-
 var config = {
+
+    // it is a config for request lib
     query: {
-         uri: {
-            hostname: 'my.domain.com',
+        uri: {
+            hostname: 'bad.domain.com',
             path: '/user',
             port: '80',
             protocol: 'http:'
-         }
+        },
+        method: 'GET'
     }
 };
 
@@ -102,8 +154,11 @@ var user = new Resources(config);
 user
     .query()
     .then((result) => {
-        console.log(result)
+        console.log(result);
     })
+    .catch((e) => {
+        console.log(e);
+    });
 ```
 
 # Sending data
@@ -111,6 +166,8 @@ user
 var Resources = require('j-resource');
 
 var config = {
+
+    // it is a config for request lib
     add: {
         uri: {
             hostname: 'my.domain.com',
@@ -118,7 +175,7 @@ var config = {
             port: '80',
             protocol: 'http:'
         },
-        method: 'POST'
+        method: 'PUT'
     }
 };
 
@@ -134,23 +191,27 @@ user
 # Uri params
 ```js
 var Resources = require('j-resource');
+
 Resources.addInterceptor('paramsToUri');
 
 var config = {
-    getUser: {
-         uri: {
-             hostname: 'my.domain.com',
-             path: '/user/:id',
-             port: '80',
-             protocol: 'http:'
-         }
+
+    // it is a config for request lib
+    getItem: {
+        uri: {
+            hostname: 'localhost',
+            path: '/user/:name',
+            port: '80',
+            protocol: 'http:'
+        },
+        method: 'get'
     }
 };
 
 var user = new Resources(config);
 
 user
-    .getUser({name: 'Matvei'})
+    .getItem({name: 'Matvei'})
     .then((result) => {
         console.log(result)
     })
@@ -159,12 +220,14 @@ user
 # Interceptors for one resource
 ```js
 var Resources = require('j-resource');
+
 Resources.addInterceptor('paramsToUri');
 
-var right = new Resource({
+
+var right = new Resources({
     check: {
         uri: {
-            hostname: 'right.my.domain.com',
+            hostname: 'right.domain.com',
             path: '/:resource/:action',
             port: '80',
             protocol: 'http:'
@@ -173,14 +236,16 @@ var right = new Resource({
 });
 
 var config = {
-    get: {
+
+    // it is a config for request lib
+    add: {
         uri: {
             hostname: 'my.domain.com',
-            path: '/user/:id',
+            path: '/user/:name',
             port: '80',
             protocol: 'http:'
-        }
-        method: 'GET',
+        },
+        method: 'get',
         interceptors: [{
             request: function(config) {
                 return right
@@ -191,19 +256,19 @@ var config = {
                     .then(() => {
                         return config;
                     });
-                }
-            }]
-        }
+            }
+        }]
+    }
 };
 
 var user = new Resources(config);
 
 user
-    .getUser({name: 'Matvei'})
+    .add({name: 'Matvei'})
     .then((result) => {
         console.log(result)
     })
-    .catch(function(err) {
-        console.log(err)
+    .catch(() => {
+        console.log(e);
     });
 ```
