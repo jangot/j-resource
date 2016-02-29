@@ -15,12 +15,14 @@ module.exports = {
         }
 
         var params = config.params || {};
-        delete config.params;
+        var query = config.uri.query || {};
 
-        var qs = config.uri.query || {};
         config.uri.search = url.format({
-            query: Object.assign(qs, params)
+            query: Object.assign(query, params)
         });
+
+        delete config.uri.query;
+        delete config.params;
 
         debug.log('interceptor, paramsToQuery', config);
         return config;
