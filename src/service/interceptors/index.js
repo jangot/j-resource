@@ -1,5 +1,6 @@
 "use strict";
 
 module.exports = {
-    paramsToUri: require('./paramsToUri')
+    paramsToUri: require('./paramsToUri'),
+    paramsToQuery: require('./paramsToQuery')
 };
