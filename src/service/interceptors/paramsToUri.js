@@ -4,7 +4,7 @@ var debug = require('../debug');
 
 module.exports = {
     request: function(config) {
-        var path = config.uri.path;
+        var path = config.uri.pathname;
 
         var params = config.params || {};
 
@@ -17,7 +17,7 @@ module.exports = {
             }
         });
 
-        config.uri.path = path;
+        config.uri.pathname = path;
         config.params = params;
 
         debug.log('interceptor, paramsToUrl', config);

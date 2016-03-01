@@ -1,6 +1,6 @@
 {
   "name": "j-resource",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "http resource",
   "main": "index.js",
   "scripts": {
