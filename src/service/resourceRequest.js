@@ -14,7 +14,7 @@ function resourceRequest(config) {
     var requestPromise = runInterceptors(currentInterceptors, Promise.resolve(config), 'request')
         .then((config) => {
             try {
-                return request(config);
+                return resourceRequest.transport(config);
             } catch (e) {
                 throw Error('Call request failed');
             }
@@ -63,4 +63,5 @@ function runInterceptors(interceptors, startPromise, interceptorType) {
 }
 
 resourceRequest.interceptors = globalInterceptors;
+resourceRequest.transport = request;
 module.exports = resourceRequest;

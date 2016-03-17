@@ -1,5 +1,6 @@
 "use strict";
 
+var _ = require('lodash');
 var resourceRequest = require('./src/service/resourceRequest');
 var embeddedInterceptors = require('./src/service/interceptors');
 var debug = require('./src/service/debug');
@@ -17,6 +18,18 @@ class Resource {
 }
 
 module.exports = Resource;
+
+
+module.exports.setTransport = function(fn) {
+    if (!_.isFunction(fn)) {
+        throw Error('Transport must be a function');
+    }
+
+    resourceRequest.transport = fn;
+
+    return this;
+};
+
 module.exports.addInterceptor = function(interceptor) {
     if (typeof interceptor === 'string') {
         interceptor = embeddedInterceptors[interceptor];
@@ -25,7 +38,12 @@ module.exports.addInterceptor = function(interceptor) {
         throw Error('Interceptor does not exist.')
     }
     resourceRequest.interceptors.push(interceptor);
+
+    return this;
 };
+
 module.exports.debug = function() {
     debug.debug(true);
+
+    return this;
 };
