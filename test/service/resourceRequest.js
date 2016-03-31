@@ -26,11 +26,6 @@ describe('service/resourceRequest', () => {
         mockery.disable();
     });
 
-    it('Get error if there is not transport', () => {
-        var resourceRequest = require('../../src/service/resourceRequest');
-        assert.throws(resourceRequest);
-    });
-
     it('call request if interceptors clean', (done) => {
         var request = sinon.stub().returns(Promise.resolve());
         mockery.registerMock('./request', request);

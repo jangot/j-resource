@@ -25,7 +25,13 @@ module.exports.setTransport = function(fn) {
         throw Error('Transport must be a function');
     }
 
-    resourceRequest.transport = fn;
+    resourceRequest.transport = function(config) {
+        return Promise
+            .resolve()
+            .then(function() {
+                return fn(config);
+            });
+    };
 
     return this;
 };

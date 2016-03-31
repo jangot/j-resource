@@ -272,3 +272,48 @@ user
         console.log(e);
     });
 ```
+
+# Change transport
+By default `j-resourse` uses npm module `request` but you can change it.
+ 
+```js
+var Resources = require('j-resource');
+var myHttpLib = require('my-http-lib');
+
+setTransport.setTransport(function(config) {
+    return new Promise(function(resolve, reject) {
+        if (config.type == 'save') {
+            myHttpLib.post('http://mydomian.com', config.params, cb);
+        } else if (config.type == 'find') {
+            myHttpLib.get('http://mydomian.com', config.params, cb);
+        } else {
+            cb('There is no type');
+        }
+        
+        function cb(err, result) {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(result);
+            }
+        }
+    });
+});
+
+var config = {
+    addMyModel: {
+        type: 'save'
+    },
+    getMyModel: {
+        type: 'faind'
+    }
+};
+
+var user = new Resources(config);
+
+user
+    .addMyModel()
+    .then((result) => {
+        console.log(result);
+    });
+```
